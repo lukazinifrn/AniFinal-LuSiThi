@@ -1,7 +1,7 @@
 import pygame
 
 class Actions(pygame.sprite.Sprite):
-    def __init__(self, frames: list, posx: int, posy: int, speed: float, fps: int, surface, scale: float = 1):
+    def __init__(self, frames: list, posx: int, posy: int, speed: float, fps: int, surface: pygame.surface.Surface, scale: float = 1):
         super().__init__()
         self.scale = scale
         self.frames = [pygame.transform.scale_by(pygame.image.load(i).convert_alpha(), self.scale) for i in frames]
@@ -22,6 +22,8 @@ class Actions(pygame.sprite.Sprite):
         self.surface = surface
         self.ballonword = ""
         self.actions_to_do = []
+        self.backgroud_img = ""
+        self.background_on = False
         
     def add_task(self, task, *args):
         self.actions_to_do.append((task, args))
@@ -126,7 +128,7 @@ class Actions(pygame.sprite.Sprite):
         self.rect.centery = posy
         return True
     
-    def ballon(self, speech: str, speed_speech: float, time: float):
+    def ballon(self, speech: str, speed_speech: float = 0.1, time: float = 5):
         self.actions_to_do.append((self.ballon_process, speech, speed_speech, time))
     
     def ballon_process(self, speech: str, speed_speech: float, time: float):
@@ -153,12 +155,24 @@ class Actions(pygame.sprite.Sprite):
             self.surface.blit(self.ballonsurface, self.ballonrect)
             self.surface.blit(text, textrect)
     
-    def change_value(self, var, value):
-        self.actions_to_do.append((self.change_value_process, var, value))
+    # def change_value(self, var, value):
+    #     self.actions_to_do.append((self.change_value_process, var, value))
     
-    def change_value_process(self, var, value):
-        var = value
+    # def change_value_process(self, var, value):
+    #     var = value
+    #     return True
+        
+    def background(self, image: str):
+        self.actions_to_do.append((self.background_process, image))
+    
+    def background_process(self, image: str):
+        self.backgroud_img = pygame.image.load(image)
+        self.background_on = True
         return True
+    
+    def background_show(self):
+        if self.background_on:
+            self.surface.blit(self.backgroud_img, (0,0))
         
     def animation(self):
         if self.walking:
@@ -170,5 +184,6 @@ class Actions(pygame.sprite.Sprite):
     
     def update(self):
         self.process_tasks()
+        self.background_show()
         self.ballon_show()
         self.animation()
