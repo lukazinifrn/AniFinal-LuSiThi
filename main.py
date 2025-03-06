@@ -12,44 +12,59 @@ pygame.display.set_caption("Anifinal - LuSiThi")
 screen = pygame.display.set_mode((w_w, w_h))
 clock = pygame.time.Clock()
 
-# Carrega os cenários
-background1, background2, background3, background4 = pygame.image.load("sprites/background/background1.png"),pygame.image.load("sprites/background/background2.png"),pygame.image.load("sprites/background/background3.png"),pygame.image.load("sprites/background/background4.png")
-# Para carregar o background
-backgroundcena1, backgroundcena2, backgroundcena3, backgroundcena4 = False, False, False, False
 
-protagonista = core_animation.Actions(["sprites/player/player_0.png", "sprites/player/player_1.png", "sprites/player/player_2.png"], 100, 170, 2, 12, screen, 0.5)
-python_boss = core_animation.Actions(["sprites/python/python_normal.png"], 2000, 2000, 2, 12, screen, 0.7)
-python = core_animation.Actions(["sprites/python/python_boss.png"], 2000, 2000, 2, 12, screen, 0.7)
-coracao1 = core_animation.Actions(["sprites/python/python_boss.png"], -200, -200, 2, 12, screen, 0.7)
-coracao2 = core_animation.Actions(["sprites/python/python_boss.png"], -200, -200, 2, 12, screen, 0.7)
+animation = core_animation.Actions(100, 170, 2, 12, screen, 0.5)
+
 
 group = pygame.sprite.Group()
-group.add(protagonista)
+group.add(animation)
 
-group.add(python_boss)
 
 def cena1():
-    protagonista.background("./sprites/background/background1.png")
-    protagonista.ballon("Josefino: Onde eu estou?",speed_speech=0.2,time=0.1)
-    protagonista.ballon("Josefino: Ola? Tem alguem aqui?", time=0.1)
-    protagonista.runto(400,50)
-    protagonista.ballon("Josefino: Oh, que flores lindas!")
-    protagonista.runto(0,-50)
-    
+    animation.background("./sprites/background/background1.png")
+    animation.teleport(animation.printatk_rect, 300, 200)
+    animation.ballon("JOSEFINO: Onde eu estou?", 0.3, 4)
+    animation.ballon("JOSEFINO: Olá? Tem alguém aqui?", 0.3, 4)
+    animation.runto(animation.rect,400,50)
+    animation.ballon("JOSEFINO: Oh, que flores lindas!")
+    animation.runto(animation.rect,0,-50)
     
 def cena2():
-    protagonista.background("./sprites/background/background2.png")
-    protagonista.runto(200,200)
-    python_boss.goto(w_w/2,w_h/2)
-    python_boss.ballon("Josefino: O que é isso no meio das flores?", 0.2, 3)
-    python_boss.ballon("Python: Prepare-se para a batalha!!", 0.15)
-
-def cena3():
-    protagonista.background("./sprites/background/background3.png")
+    animation.teleport(animation.rect, -500, -500)
+    animation.background("./sprites/background/background2.png")
+    animation.teleport(animation.python_rect, w_w/2, w_h/2)
+    animation.ballon("JOSEFINO: Ué, mas o que é isso no meio dos flores?", 0.3, 5)
+    for _ in range(90):
+        if _%4 <= 2:
+            animation.teleport(animation.pythonboss_rect, w_w/2, w_h/2)
+            animation.teleport(animation.python_rect, -500, -500)
+        else:
+            animation.teleport(animation.python_rect, w_w/2, w_h/2)
+            animation.teleport(animation.pythonboss_rect, -500, -500)
+            
+    animation.teleport(animation.pythonboss_rect, w_w/2, w_h/2)
+    animation.teleport(animation.python_rect, -500, -500)
+    animation.wait(2)
+    animation.ballon("PYTHON: Prepare-se para as consequências!!!", 0.5, 3)
+    animation.ballon("PYTHON: Você atrapalhou minha copilação!!!", 0.5, 4)
+    animation.ballon("PYTHON: SEU SEM AMOR PATERNO!!!!!!!!!!!", 0.5, 4)
     
-
+def cena3():
+    animation.teleport(animation.rect, -500, -500)
+    animation.background("./sprites/background/background3.png")
+    animation.teleport(animation.pythonboss_rect, w_w/2, 70)
+    animation.teleport(animation.heart_rect, w_w/2-10, w_h/2+30)
+    animation.ballon("Boa sorte em desviar disso HAHHAHHAHAH", 0.4, 4)
+    animation.runto(animation.heart_rect, 40, 0)
+    animation.teleport(animation.atk1_rect, w_w/2-10, w_h/2+30)
+    animation.runto(animation.heart_rect, -100, -20)
+    animation.teleport(animation.atk1_rect, w_w/2-30, w_h/2+30)
+    animation.runto(animation.heart_rect, +70, -20)
+    animation.teleport(animation.atk1_rect, w_w/2+70, w_h/2-20)
+    
+    
 def cena4():
-    protagonista.background("./sprites/background/background4.png")
+    pass
 
 cena = int(input(menu))
 
