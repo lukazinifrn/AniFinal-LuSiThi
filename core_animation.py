@@ -152,6 +152,13 @@ class Actions(pygame.sprite.Sprite):
             textrect = text.get_rect(topleft = (self.ballonrect.left + 16, self.ballonrect.top + 16))
             self.surface.blit(self.ballonsurface, self.ballonrect)
             self.surface.blit(text, textrect)
+    
+    def change_value(self, var, value):
+        self.actions_to_do.append((self.change_value_process, var, value))
+    
+    def change_value_process(self, var, value):
+        var = value
+        return True
         
     def animation(self):
         if self.walking:

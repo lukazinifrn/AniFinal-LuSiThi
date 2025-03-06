@@ -22,7 +22,7 @@ def cena1():
     for _ in range(7):
         pythonzinho.runto(-20, 0)
         pythonzinho.runto(20, 0)
-    pythonzinho.ballon("Jurandy Games", 0.1, 10)
+    pythonzinho.ballon("Jurandy Games", 0.1, 5)
     
     
 cena1()
