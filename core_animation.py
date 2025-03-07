@@ -4,8 +4,9 @@ class Actions(pygame.sprite.Sprite):
     def __init__(self, posx: int, posy: int, speed: float, fps: int, surface: pygame.surface.Surface, scale: float = 1):
         super().__init__()
         self.scale = scale
-        i = ["sprites/player/player_0.png", "sprites/player/player_1.png", "sprites/player/player_2.png"]
-        self.frames = [pygame.transform.scale_by(pygame.image.load(j).convert_alpha(), self.scale) for j in i]
+        self.i = ["sprites/player/player_0.png", "sprites/player/player_1.png", "sprites/player/player_2.png"]
+        self.frames = [pygame.transform.scale_by(pygame.image.load(j).convert_alpha(), self.scale) for j in self.i]
+        self.music = pygame.mixer.Sound("audio/megalovania.mp3")
         self.fps = fps
         self.index = 0
         self.image = self.frames[self.index]
@@ -30,11 +31,17 @@ class Actions(pygame.sprite.Sprite):
         self.pythonboss = pygame.transform.scale_by(pygame.image.load("sprites/python/python_boss.png"), 0.7)
         self.pythonboss_rect = self.pythonboss.get_rect(center = (-500, -500))
         self.java = pygame.image.load("sprites/java.png")
-        self.java_rect = self.java.get_rect(center = (-500, -500))
+        self.java_rect = self.java.get_rect(center = (1000, 200))
         self.atk1 = pygame.transform.scale_by(pygame.image.load("sprites/atks/atk1.png"), 0.5)
         self.atk1_rect = self.atk1.get_rect(center = (-500, -500))
         self.atk2 = pygame.transform.scale_by(pygame.image.load("sprites/atks/atk2.png"), 0.5)
         self.atk2_rect = self.atk1.get_rect(center = (-500, -500))
+        self.javapower = pygame.transform.scale_by(pygame.image.load("sprites/java_power.png"), 0.5)
+        self.javapower_rect = self.javapower.get_rect(center = (400, -200))
+        self.c = pygame.transform.scale_by(pygame.image.load("sprites/cplusplus.png"), 0.5)
+        self.c_rect = self.c.get_rect(center = (1000, 200))
+        self.atk_player = pygame.transform.scale_by(pygame.image.load("sprites/atk_player.png"), 0.5)
+        self.atk_player_rect = self.atk_player.get_rect(center = (400, 500))
         
         self.heart_frames = ["sprites/heart/heart_1.png", "sprites/heart/heart_2.png", "sprites/heart/heart_3.png", "sprites/heart/heart_4.png"
                              "sprites/heart/heart_5.png", "sprites/heart/heart_6.png" "sprites/heart/heart_7.png"]
@@ -53,7 +60,6 @@ class Actions(pygame.sprite.Sprite):
                 self.runningx = 0
                 self.runningy = 0
     
-    # Funções do protagonista
     def goto(self, rect, tox: int, toy: int):
         self.actions_to_do.append((self.goto_process, rect, tox, toy))
 
@@ -146,33 +152,6 @@ class Actions(pygame.sprite.Sprite):
        rect.centerx = posx
        rect.centery = posy
        return True
-    
-    def ballon(self, speech: str, speed_speech: float = 0.1, time: float = 5):
-        self.actions_to_do.append((self.ballon_process, speech, speed_speech, time))
-    
-    def ballon_process(self, speech: str, speed_speech: float, time: float):
-        if not(self.ballon_on):
-            pygame.mixer.Sound("audio/ballon.mp3").play()
-        if len(self.ballonword) != len(speech):
-            self.ballonindex += speed_speech
-            self.ballonword = speech[0: int(self.ballonindex)]
-            self.ballon_on = True
-        else:
-            if self.ballontime < 60*time:
-                self.ballontime += 1
-            else:
-                self.ballon_on = False
-                self.ballonword = ""
-                self.ballontime = 0
-                self.ballonindex = 0
-                return True
-                        
-    def ballon_show(self):
-        if self.ballon_on:
-            text = self.font.render(self.ballonword, False, "white")
-            textrect = text.get_rect(topleft = (self.ballonrect.left + 16, self.ballonrect.top + 16))
-            self.surface.blit(self.ballonsurface, self.ballonrect)
-            self.surface.blit(text, textrect)
         
     def background(self, image: str):
         self.actions_to_do.append((self.background_process, image))
@@ -193,16 +172,67 @@ class Actions(pygame.sprite.Sprite):
         self.surface.blit(self.pythonboss, self.pythonboss_rect)
         self.surface.blit(self.atk1, self.atk1_rect)
         self.surface.blit(self.atk2, self.atk2_rect)
+        self.surface.blit(self.javapower, self.javapower_rect)
+        self.surface.blit(self.atk_player, self.atk_player_rect)
+        self.surface.blit(self.c, self.c_rect)
     
+    def play_music(self, volume: float):
+        self.actions_to_do.append((self.play_music_process, volume))
+        
+    def play_music_process(self, volume:float):
+        self.music.play()
+        self.music.set_volume(volume)
+        return True
+    
+    def stop_music(self, stop: bool = True):
+        self.actions_to_do.append((self.stop_music_process, stop))
+        
+    def stop_music_process(self, stop: bool = True):
+        if stop:
+            self.music.stop()
+        return True
+   
     def wait(self, time: int):
         self.actions_to_do.append((self.wait_process, time))
-    def wait(self, time: int):
+    
+    def wait_process(self, time: int):
         if self.timewait > time*60:
             self.timewait += 1
             return False
         else:
             self.timewait = 0
             return True
+    
+    def ballon(self, speech: str, speed_speech: float = 0.1, time: float = 5):
+        self.actions_to_do.append((self.ballon_process, speech, speed_speech, time))
+    
+    def ballon_process(self, speech: str, speed_speech: float, time: float):
+        k = self.ballonword
+        # if not(self.ballon_on):
+        #     pygame.mixer.Sound("audio/ballon.mp3").play()
+        if len(self.ballonword) != len(speech):
+            self.ballonindex += speed_speech
+            self.ballonword = speech[0: int(self.ballonindex)]
+            self.ballon_on = True
+        if len(self.ballonword) > len(k):
+            pygame.mixer.Sound("audio/blip.wav").play()
+        else:
+            if self.ballontime < 60*time:
+                self.ballontime += 1
+            else:
+                self.ballon_on = False
+                self.ballonword = ""
+                self.ballontime = 0
+                self.ballonindex = 0
+                return True
+                        
+    def ballon_show(self):
+        if self.ballon_on:
+            text = self.font.render(self.ballonword, False, "white")
+            textrect = text.get_rect(topleft = (self.ballonrect.left + 16, self.ballonrect.top + 16))
+            self.surface.blit(self.ballonsurface, self.ballonrect)
+            self.surface.blit(text, textrect)
+            
     def animation(self):
         if self.walking:
             self.index += (1/60) * self.fps
