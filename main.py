@@ -46,7 +46,7 @@ def cena2():
     animation.teleport(animation.python_rect, -500, -500)
     animation.wait(2)
     animation.ballon("""PYTHON: print("Prepare-se para as consequências!!!")""", 0.5, 3)
-    animation.ballon("""PYTHON: print("Você atrapalhou minha copilação!!!")""", 0.5, 4)
+    animation.ballon("""PYTHON: print("Você atrapalhou minha compilação!!!")""", 0.5, 4)
     animation.ballon("""PYTHON: print("SEU SEM AMOR PATERNO!!!!!!!!!!!")""", 0.5, 4)
     
 def cena3():
@@ -54,7 +54,7 @@ def cena3():
     animation.background("./sprites/background/background3.png")
     animation.teleport(animation.pythonboss_rect, w_w/2, 70)
     animation.teleport(animation.heart_rect, w_w/2-10, w_h/2+30)
-    animation.play_music(0.3)
+    animation.play_music(0.5)
     animation.ballon("""PYTHON: print("Boa sorte em desviar disso HAHHAHHAHAH")""", 0.4, 5)
     animation.goto(animation.heart_rect, 300, 240)
     animation.teleport(animation.atk1_rect, w_w/2-10, w_h/2+30)
@@ -142,7 +142,7 @@ def cena6():
     animation.background("sprites/background/background3.png")
     animation.teleport(animation.pythonboss_rect, w_w/2, 70)
     animation.teleport(animation.heart_rect, w_w/2-10, w_h/2+30)
-    animation.play_music(0.3)
+    animation.play_music(0.5)
     animation.ballon("""PYTHON: print("Mas o quê???")""", 0.5, 3)
     animation.ballon("""PYTHON: print("Como você não morreu?")""", 0.5, 4)
     animation.ballon("JOSEFINO: Bem, isso não te interessa.", 0.4, 5)
@@ -181,8 +181,9 @@ def cena7():
 
 def cena8():
     animation.teleport(animation.c_rect, -500, -500)
+    animation.teleport(animation.rect, -500, -500)
     animation.background("sprites/background/background6.png")
-    animation.teleport(animation.rect, 150, 230)
+    animation.teleport(animation.playernormal_rect, 150, 230)
     animation.ballon("JOSEFINO: AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH", 0.6, 4)
     animation.ballon("JOSEFINO: Quê?", 0.3, 3)
     animation.ballon("JOSEFINO: Foi tudo um sonho?", 0.4, 3)
@@ -191,11 +192,28 @@ def cena8():
     animation.ballon("JOSEFINO: E jogando Undertale até tarde.", 0.5, 4)
     animation.ballon("JOSEFINO: Que sonho louco...", 0.5, 3)
     animation.ballon("JOSEFINO: Vou ficar longe do computador por um tempo...", 0.7, 3)
-    animation.runto(animation.rect, 0, 50)
-    animation.runto(animation.rect, 900, 0)
+    animation.runto(animation.playernormal_rect, 0, 50)
+    animation.runto(animation.playernormal_rect, 900, 0)
+    
+def cena9():
     animation.background("sprites/background/background4.png")
-    animation.play_music(0.5)
-    animation.ballon("FIM...", 0.1, 25)
+    animation.teleport(animation.rect, -500, -500)
+    animation.teleport(animation.c_rect, -200, w_h/2)
+    animation.play_music(0.7)
+    animation.ballon("FIM...", 0.1, 5)
+    animation.ballon("A lição do dia é: Programem em Java!", 0.3, 5)
+    animation.goto(animation.c_rect, w_w/2, w_h/2)
+    animation.ballon("""std::cout << "NÃAAAAOOO,  programem em C++!!";""", 0.5, 4)
+    animation.goto(animation.bone_rect, w_w/2, w_h/2)
+    for k in range(90):
+        l = k * 5
+        animation.teleport(animation.c_rect, w_w/2 - l,  w_h/2 - l/2)
+        animation.teleport(animation.bone_rect, -500, -500)
+    animation.teleport(animation.bone_rect, -500, -500)
+    animation.goto(animation.sans_rect, w_w/2, w_h/2)
+    animation.ballon("SANS: Negativo. A lição do dia é: não programem.", 0.4, 5)
+    animation.runto(animation.sans_rect, -700, 0)
+    animation.ballon("Agora sim...FIM...", 0.1, 10)
     animation.stop_music()
     
 cena = int(input(menu))
@@ -209,6 +227,7 @@ if cena == 1:
     cena6()
     cena7()
     cena8()
+    cena9()
 
 elif cena == 2:
     cena2()
@@ -218,6 +237,7 @@ elif cena == 2:
     cena6()
     cena7()
     cena8()
+    cena9()
     
 elif cena == 3:
     cena3()
@@ -226,6 +246,7 @@ elif cena == 3:
     cena6()
     cena7()
     cena8()
+    cena9()
     
 elif cena == 4:
     cena4()
@@ -233,28 +254,36 @@ elif cena == 4:
     cena6()
     cena7()
     cena8()
+    cena9()
     
 elif cena == 5:
     cena5()
     cena6()
     cena7()
     cena8()
+    cena9()
 
 elif cena == 6:
     cena6()
     cena7()
     cena8()
+    cena9()
 
 elif cena == 7:
     cena7()
     cena8()
+    cena9()
 
 elif cena == 8:
     cena8()
+    cena9()
 
 elif cena == 9:
+    cena9()
+
+elif cena == 10:
     pass
-    
+
 while True:
     for ev in pygame.event.get():
         if ev.type == pygame.QUIT:

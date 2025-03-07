@@ -26,29 +26,66 @@ class Actions(pygame.sprite.Sprite):
         self.actions_to_do = []
         self.backgroud_img = ""
         self.background_on = False
+        
+        # Python
         self.python = pygame.transform.scale_by(pygame.image.load("sprites/python/python_normal.png"), 0.7)
         self.python_rect = self.python.get_rect(center = (-500, -500))
+
+        # Python Boss
         self.pythonboss = pygame.transform.scale_by(pygame.image.load("sprites/python/python_boss.png"), 0.7)
         self.pythonboss_rect = self.pythonboss.get_rect(center = (-500, -500))
+
+        # Java
         self.java = pygame.image.load("sprites/java.png")
         self.java_rect = self.java.get_rect(center = (1000, 200))
+
+        # Atk1
         self.atk1 = pygame.transform.scale_by(pygame.image.load("sprites/atks/atk1.png"), 0.5)
         self.atk1_rect = self.atk1.get_rect(center = (-500, -500))
+
+        # Atk2
         self.atk2 = pygame.transform.scale_by(pygame.image.load("sprites/atks/atk2.png"), 0.5)
         self.atk2_rect = self.atk1.get_rect(center = (-500, -500))
+
+        # Java Power
         self.javapower = pygame.transform.scale_by(pygame.image.load("sprites/java_power.png"), 0.5)
         self.javapower_rect = self.javapower.get_rect(center = (400, -200))
+
+        # C++
         self.c = pygame.transform.scale_by(pygame.image.load("sprites/cplusplus.png"), 0.5)
         self.c_rect = self.c.get_rect(center = (1000, 200))
+
+        # Atk Player
         self.atk_player = pygame.transform.scale_by(pygame.image.load("sprites/atk_player.png"), 0.5)
         self.atk_player_rect = self.atk_player.get_rect(center = (400, 500))
+
+        # Player normal
+        self.playernormal_frames = [pygame.image.load("sprites/player/player_normal1.png"), pygame.image.load("sprites/player/player_normal2.png")]
+        self.playernormal_index = 0
+        self.playernormal_image = self.playernormal_frames[self.playernormal_index]
+        self.playernormal_rect = self.playernormal_image.get_rect(center = (-500, -500))
+        self.playernormal_walking = False
+
+        # Sans
+        self.sans_frames = [pygame.image.load("sprites/sans/sans_1.gif"), pygame.image.load("sprites/sans/sans_2.gif"), pygame.image.load("sprites/sans/sans_3.gif"), pygame.image.load("sprites/sans/sans_4.gif")]
+        self.sans_index = 0
+        self.sans_image = self.sans_frames[self.sans_index]
+        self.sans_rect = self.sans_image.get_rect(center = (1000, 200))
+        self.sans_walking = False
         
+        # Bone
+        self.bone = pygame.transform.scale_by(pygame.image.load("sprites/bone.png"), 0.1)
+        self.bone_rect = self.bone.get_rect(center = (1000, 200))
+
+        # Heart
         self.heart_frames = ["sprites/heart/heart_1.png", "sprites/heart/heart_2.png", "sprites/heart/heart_3.png", "sprites/heart/heart_4.png"
                              "sprites/heart/heart_5.png", "sprites/heart/heart_6.png" "sprites/heart/heart_7.png"]
         self.heart_fps = 4
         self.heart_index = 0
         self.heart = pygame.transform.scale_by(pygame.image.load(self.heart_frames[self.heart_index]), 0.5)
         self.heart_rect = self.heart.get_rect(center = (-500, -500))
+
+        # Wait var
         self.timewait = 0
     
     def process_tasks(self):
@@ -101,6 +138,8 @@ class Actions(pygame.sprite.Sprite):
         
         if rect == self.rect:
             self.walking = move
+        if rect == self.sans_rect:
+            self.sans_walking = move
         return not move
     
     def runto(self, rect, runx: int, runy:int):
@@ -143,6 +182,11 @@ class Actions(pygame.sprite.Sprite):
             
         if rect == self.rect:
             self.walking = moverun
+        if rect == self.playernormal_rect:
+            self.playernormal_walking = moverun
+        if rect == self.sans_rect:
+            self.sans_walking = moverun
+
         return not moverun
     
     def teleport(self, rect, posx: int, posy:int):
@@ -175,6 +219,9 @@ class Actions(pygame.sprite.Sprite):
         self.surface.blit(self.javapower, self.javapower_rect)
         self.surface.blit(self.atk_player, self.atk_player_rect)
         self.surface.blit(self.c, self.c_rect)
+        self.surface.blit(self.playernormal_image, self.playernormal_rect)
+        self.surface.blit(self.sans_image, self.sans_rect)
+        self.surface.blit(self.bone, self.bone_rect)
     
     def play_music(self, volume: float):
         self.actions_to_do.append((self.play_music_process, volume))
@@ -241,9 +288,27 @@ class Actions(pygame.sprite.Sprite):
             self.index = 0
             self.image = self.frames[self.index]
     
+    def animation_playernormal(self):
+        if self.playernormal_walking:
+            self.playernormal_index += (1/60) * self.fps
+            self.playernormal_image = self.playernormal_frames[int(self.playernormal_index % len(self.playernormal_frames))]
+        else:
+            self.playernormal_index = 0
+            self.playernormal_image = self.playernormal_frames[self.playernormal_index]
+    
+    def animation_sans(self):
+        if self.sans_walking:
+            self.sans_index += (1/60) * self.fps
+            self.sans_image = self.sans_frames[int(self.sans_index % len(self.sans_frames))]
+        else:
+            self.sans_index = 0
+            self.sans_image = pygame.image.load("sprites/sans/sans_0.gif")
+    
     def update(self):
         self.process_tasks()
         self.background_show()
         self.show_sprites()
-        self.ballon_show()
         self.animation()
+        self.animation_playernormal()
+        self.animation_sans()
+        self.ballon_show()
